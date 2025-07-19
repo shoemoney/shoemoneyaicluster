@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 # 🚀 ShoemoneyAI Cluster - Universal Exo Installation Script
 # This script sets up exo on any Unix-like system for distributed AI inference
 # Designed to work across multiple nodes in your cluster
-
+deactivate
+source /Users/shoemoney/exo/venv/bin/activate
 set -e  # Exit on error
 
 # 🎨 Colors for output
@@ -152,7 +153,7 @@ install_dependencies() {
             # Check if Homebrew is installed
             if ! command -v brew &> /dev/null; then
                 echo -e "${YELLOW}Installing Homebrew...${NC}"
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             fi
             
             echo -e "${YELLOW}Installing required packages...${NC}"
@@ -181,7 +182,7 @@ setup_python() {
     # Install pyenv for consistent Python version
     if ! command -v pyenv &> /dev/null; then
         echo -e "${YELLOW}Installing pyenv...${NC}"
-        curl https://pyenv.run | bash
+        curl https://pyenv.run | zsh
         
         # Add pyenv to PATH
         export PYENV_ROOT="$HOME/.pyenv"
@@ -189,9 +190,9 @@ setup_python() {
         eval "$(pyenv init -)"
         
         # Add to shell profile
-        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-        echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-        echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+        echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+        echo 'eval "$(pyenv init -)"' >> ~/.zshrc
     fi
     
     # Install Python version
@@ -294,7 +295,7 @@ EOF
     
     # Start script
     cat > "$INSTALL_DIR/start-node.sh" << 'EOF'
-#!/bin/bash
+#!/bin/zsh
 cd "$(dirname "$0")"
 source .venv/bin/activate
 exec python -m exo.main "$@"
@@ -303,7 +304,7 @@ EOF
     
     # Update script
     cat > "$INSTALL_DIR/update-node.sh" << 'EOF'
-#!/bin/bash
+#!/bin/zsh
 cd "$(dirname "$0")"
 git pull
 source .venv/bin/activate
@@ -337,7 +338,7 @@ EOF
     
     # Cluster status script
     cat > "$INSTALL_DIR/cluster-status.sh" << 'EOF'
-#!/bin/bash
+#!/bin/zsh
 # 📊 Check status of all cluster nodes
 
 echo "🔍 Checking Exo Cluster Status..."
@@ -370,7 +371,7 @@ EOF
 setup_profile() {
     echo -e "${BLUE}🎯 Setting up shell profile...${NC}"
     
-    PROFILE_FILE="$HOME/.bashrc"
+    PROFILE_FILE="$HOME/.zshrc"
     if [[ "$SYSTEM" == "macos" ]]; then
         PROFILE_FILE="$HOME/.zshrc"
     fi
