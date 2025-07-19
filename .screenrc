@@ -1,0 +1,188 @@
+# 🚀 ShoemoneyAI Cluster - Screen Configuration
+# Battle-tested .screenrc for remote development and AI cluster management
+# Compatible with GNU Screen 4.x and 5.x
+
+# 🎯 Core Settings
+# ================
+
+# No startup message
+startup_message off
+
+# Automatic detach on hangup (essential for remote sessions)
+autodetach on
+
+# Large scrollback buffer for debugging
+defscrollback 10000
+
+# Enable UTF-8 encoding (critical for emojis and international chars)
+defutf8 on
+defencoding utf8
+encoding utf8 utf8
+
+# 🎨 Terminal and Color Settings
+# ==============================
+
+# Enable 256 colors
+term screen-256color
+
+# Allow bold colors - helps with syntax highlighting
+attrcolor b ".I"
+attrcolor i "+b"
+
+# Background color erase (BCE) - fixes background color issues
+defbce on
+
+# Fix for xterm color capabilities
+termcapinfo xterm* 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+
+# 🖱️ Mouse Support
+# ================
+
+# Enable mouse tracking (Hold Shift to bypass for normal selection)
+# Commented out by default - uncomment if you want mouse support
+# mousetrack on
+
+# 📊 Status Bar Configuration
+# ===========================
+
+# Always show status line at bottom
+hardstatus on
+hardstatus alwayslastline
+
+# Professional status bar with:
+# - Hostname in green
+# - Window list with highlighting
+# - Load average
+# - Current date/time
+hardstatus string '%{= kG}[%{G}%H%{g}]%{= kw} %= %{= kw}%-w%{+b yk} %n*%t%?(%u)%? %{-}%+w %=%{g}[%{Y}%l%{g}] [%{B}%m/%d %{W}%C%A%{g}]'
+
+# Activity monitoring
+activity "Activity in window %n"
+bell_msg "Bell in window %n"
+
+# Visual bell instead of audio
+vbell on
+vbell_msg " *DING* "
+
+# 🔧 Window Management
+# ====================
+
+# Default shell
+shell -$SHELL
+
+# Window naming
+shelltitle "$ |bash"
+
+# Start with windows
+screen -t "🎯 Main" 0
+screen -t "🤖 Worker1" 1
+screen -t "📊 Monitor" 2
+
+# Default to first window
+select 0
+
+# ⌨️ Key Bindings
+# ===============
+
+# Keep default Ctrl+A as command key
+escape ^Aa
+
+# Window navigation
+bind ' ' windowlist -b              # Space shows window list
+bind h prev                         # Previous window
+bind l next                         # Next window
+
+# Vim-style split navigation
+bind j focus down
+bind k focus up
+bind ^j focus down
+bind ^k focus up
+
+# F-key bindings
+bindkey -k k1 select 0              # F1 - window 0
+bindkey -k k2 select 1              # F2 - window 1
+bindkey -k k3 select 2              # F3 - window 2
+bindkey -k k4 select 3              # F4 - window 3
+
+# Create new window with Ctrl+A c (default)
+# Kill window with Ctrl+A K
+bind K kill
+
+# Reload screenrc
+bind R eval "source $HOME/.screenrc" "echo '.screenrc reloaded!'"
+
+# 📋 Copy/Paste Configuration
+# ===========================
+
+# Enter copy mode with Ctrl+A [
+# Navigation in copy mode: vi-like keys
+markkeys ^U=^B:^D=^F              # Page up/down with Ctrl+U/D
+
+# Better buffer file location
+bufferfile $HOME/.screen-exchange
+
+# macOS clipboard integration (Ctrl+A y)
+bind y eval 'writebuf' 'exec sh -c "pbcopy < $HOME/.screen-exchange"' 'echo "Copied to clipboard"'
+
+# Linux clipboard integration (Ctrl+A y) - uncomment if on Linux
+# bind y eval 'writebuf' 'exec sh -c "xclip -selection clipboard < $HOME/.screen-exchange"' 'echo "Copied to clipboard"'
+
+# 🌐 SSH and Remote Session Support
+# =================================
+
+# Fix scrollback in SSH/PuTTY
+termcapinfo xterm* ti@:te@
+
+# Maintain SSH agent socket
+unsetenv SSH_AUTH_SOCK
+setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
+
+# 🛡️ Security and Permissions
+# ===========================
+
+# Multiuser settings (if needed for shared sessions)
+# multiuser on
+# acladd user1,user2
+
+# Password protection (uncomment to use)
+# password
+
+# 💾 Logging
+# ==========
+
+# Default log settings
+logfile $HOME/.screen/screenlog.%n
+logtstamp on
+logtstamp after 120
+
+# 🎯 Performance Optimizations
+# ============================
+
+# Disable flow control (Ctrl+S/Ctrl+Q)
+defflow off
+
+# Faster response time
+maptimeout 5
+
+# 🔌 Special Configurations
+# ========================
+
+# Don't block on unresponsive windows
+nonblock on
+
+# Message wait time
+msgwait 2
+
+# Silence new windows
+defsilence on
+silence on
+
+# 📝 Notes
+# ========
+# - Hold Shift while selecting text to bypass mouse mode
+# - Use 'Ctrl+A d' to detach
+# - Use 'screen -r' to reattach
+# - Use 'Ctrl+A ?' for help
+# - Use 'Ctrl+A :' for command mode
+
+# End of .screenrc 🚀
