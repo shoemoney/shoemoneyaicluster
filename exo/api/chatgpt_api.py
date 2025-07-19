@@ -26,6 +26,7 @@ from exo.download.new_shard_download import delete_model
 import tempfile
 from exo.apputil import create_animation_mp4
 from collections import defaultdict
+from exo.api.database_api import DatabaseAPI, get_database_tools
 
 if platform.system().lower() == "darwin" and platform.machine().lower() == "arm64":
   import mlx.core as mx

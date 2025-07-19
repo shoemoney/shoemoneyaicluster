@@ -1,0 +1,12 @@
+{
+  "host": "localhost",
+  "port": 3306,
+  "user": "exo_ai",
+  "password": "",
+  "database": "exo_cluster",
+  "charset": "utf8mb4",
+  "max_connections": 20,
+  "connection_timeout": 30,
+  "read_timeout": 60,
+  "write_timeout": 60
+}

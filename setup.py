@@ -22,6 +22,7 @@ install_requires = [
   "psutil==6.0.0",
   "pyamdgpuinfo==2.1.6;platform_system=='Linux'",
   "pydantic==2.9.2",
+  "pymysql==1.1.1",
   "requests==2.32.3",
   "rich==13.7.1",
   "scapy==2.6.1",
