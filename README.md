@@ -7,6 +7,39 @@
 
 exo: Run your own AI cluster at home with everyday devices. Maintained by [exo labs](https://x.com/exolabs).
 
+# 🚀 ShoeMoney AI Cluster
+
+This is a **fixed and optimized** version of the exo project specifically configured for macOS with Apple Silicon. All dependency conflicts have been resolved and Python 3.12+ compatibility is ensured.
+
+## ⚡ Quick Start
+
+**The fastest way to get started:**
+
+```bash
+./start_exo.sh
+```
+
+This script will:
+- 🔧 Automatically create a Python 3.12 virtual environment
+- 📦 Install all dependencies correctly
+- 🍎 Optimize settings for Apple Silicon
+- 🚀 Launch the exo cluster
+
+**Manual installation (if needed):**
+
+```bash
+# Ensure Python 3.12+
+/opt/homebrew/bin/python3.12 -m venv exo_venv
+source exo_venv/bin/activate
+pip install -e .
+
+# Apple Silicon optimization
+./configure_mlx.sh
+
+# Run exo
+exo
+```
+
 
 <h3>
 
