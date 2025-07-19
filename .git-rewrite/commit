@@ -1,0 +1,6 @@
+tree 4290bf40100f5b8ee7d274c625f521179dd6a850
+parent 5923deb66ba8f3d12b969d789182bcd2ca0172b4
+author Nel Nibcord <blindcrone@tuta.io> 1733865689 -0800
+committer Nel Nibcord <blindcrone@tuta.io> 1733914598 -0800
+
+Dummied up an abstact save_checkpoint
