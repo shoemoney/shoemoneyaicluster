@@ -1,0 +1,8 @@
+#!/bin/bash
+# 🚀 Clean launcher for exo without warnings
+
+# 🔇 Suppress transformers warnings
+export TRANSFORMERS_NO_ADVISORY_WARNINGS=true
+
+# 🎯 Run exo with Python warnings filtered
+exec python -W ignore::UserWarning:google.protobuf.runtime_version -W "ignore:None of PyTorch" -m exo.main "$@"

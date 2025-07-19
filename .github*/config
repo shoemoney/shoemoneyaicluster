@@ -1,0 +1,23 @@
+Host *
+  ServerAliveInterval 60
+  ConnectTimeout 10
+  AddKeysToAgent yes
+  EscapeChar `
+  ControlMaster auto
+  ControlPersist 72000
+
+
+Host coder
+   HostName 192.168.1.5
+   PreferredAuthentications publickey
+  IdentityFile  /Users/shoemoney/.ssh/shoemoneyai
+
+Host vision
+   HostName 192.168.1.4
+   PreferredAuthentications publickey
+   IdentityFile  /Users/shoemoney/.ssh/shoemoneyai
+
+Host reasoner
+     HostName 192.168.1.3
+      PreferredAuthentications publickey
+      IdentityFile /Users/shoemoney/.ssh/shoemoneyai
