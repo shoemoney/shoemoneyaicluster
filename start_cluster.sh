@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 # 🎯 Quick cluster starter - Launch multiple exo nodes easily
 
 set -e
@@ -11,7 +11,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # 📍 Configuration
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${zsh_SOURCE[0]}" )" && pwd )"
 CLUSTER_SCRIPT="$SCRIPT_DIR/clusterexo.sh"
 
 # 🌐 Network configuration - use hostname for cluster access
@@ -38,11 +38,11 @@ start_in_screen() {
     screen -S exo-cluster -X quit 2>/dev/null || true
     
     # Start main node in new screen session
-    screen -dmS exo-cluster -t main bash -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1)) $node_host_arg; exec bash"
+    screen -dmS exo-cluster -t main zsh -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1)) $node_host_arg; exec zsh"
     
     # Start worker nodes in new windows
     for i in $(seq 1 $((num_nodes-1))); do
-        screen -S exo-cluster -X screen -t "worker$i" bash -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id worker$i $node_host_arg; exec bash"
+        screen -S exo-cluster -X screen -t "worker$i" zsh -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id worker$i $node_host_arg; exec zsh"
     done
     
     echo -e "${GREEN}✅ Cluster started in screen session 'exo-cluster'${NC}"
