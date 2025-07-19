@@ -47,6 +47,7 @@ ${YELLOW}Options:${NC}
   ${GREEN}--api-port${NC}              ChatGPT API port (default: 52415)
   ${GREEN}--listen-port${NC}           Discovery listen port (default: 5678)
   ${GREEN}--broadcast-port${NC}        Discovery broadcast port (default: 5679)
+  ${GREEN}--node-host${NC}             Node host binding (default: 0.0.0.0 for all interfaces)
   ${GREEN}--manual-config${NC}         Path to manual discovery config JSON
   ${GREEN}--run${NC}                   Run a model directly with a prompt
   ${GREEN}--debug${NC}                 Enable debug output
@@ -123,6 +124,7 @@ start_exo() {
     [ -n "$MODEL" ] && cmd="$cmd --default-model $MODEL" && echo -e "${GREEN}🤖 Model:${NC} $MODEL"
     [ -n "$WAIT_PEERS" ] && cmd="$cmd --wait-for-peers $WAIT_PEERS" && echo -e "${GREEN}👥 Wait for peers:${NC} $WAIT_PEERS"
     [ -n "$MANUAL_CONFIG" ] && cmd="$cmd --discovery-config-path $MANUAL_CONFIG" && echo -e "${GREEN}📄 Config:${NC} $MANUAL_CONFIG"
+    [ -n "$NODE_HOST" ] && cmd="$cmd --node-host $NODE_HOST" && echo -e "${GREEN}🌐 Node host:${NC} $NODE_HOST"
     [ "$HEADLESS" = true ] && cmd="$cmd --disable-tui"
     [ "$RUN_MODE" = true ] && cmd="$cmd run" && echo -e "${GREEN}▶️  Mode:${NC} Direct run"
     [ "$DEBUG" = true ] && export DEBUG=9 && echo -e "${GREEN}🐛 Debug:${NC} Enabled"
@@ -209,6 +211,10 @@ main() {
                 ;;
             --manual-config)
                 MANUAL_CONFIG="$2"
+                shift 2
+                ;;
+            --node-host)
+                NODE_HOST="$2"
                 shift 2
                 ;;
             --run)

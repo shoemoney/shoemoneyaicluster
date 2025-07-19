@@ -370,7 +370,7 @@ async def main():
       await train_model_cli(node, model_name, dataloader, args.batch_size, args.iters, save_interval=args.save_every, checkpoint_dir=args.save_checkpoint_dir)
 
   else:
-    asyncio.create_task(api.run(host="0.0.0.0", port=args.chatgpt_api_port))  # Start the API server as a non-blocking task
+    asyncio.create_task(api.run(host=args.node_host, port=args.chatgpt_api_port))  # Start the API server as a non-blocking task
     await asyncio.Event().wait()
 
   if args.wait_for_peers > 0:
