@@ -21,6 +21,10 @@ DEFAULT_CHATGPT_PORT=52415
 DEFAULT_DISCOVERY="udp"
 DEFAULT_INFERENCE_ENGINE="mlx"
 
+# 🌐 Network configuration - use hostname for cluster access
+HOSTNAME="$(hostname -s)"
+LOCAL_IP="$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $2}' || echo 'localhost')"
+
 # 🛠️ Configuration
 VENV_PATH=".venv"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -70,8 +74,8 @@ ${YELLOW}Multi-Node Setup:${NC}
   # Terminal 2 (Worker node):
   $0 --node-id worker1
 
-${PURPLE}Web Interface:${NC} http://localhost:${DEFAULT_CHATGPT_PORT}
-${PURPLE}API Endpoint:${NC}  http://localhost:${DEFAULT_CHATGPT_PORT}/v1/chat/completions
+${PURPLE}Web Interface:${NC} http://${HOSTNAME}.local:${DEFAULT_CHATGPT_PORT}
+${PURPLE}API Endpoint:${NC}  http://${HOSTNAME}.local:${DEFAULT_CHATGPT_PORT}/v1/chat/completions
 
 EOF
 }
@@ -124,8 +128,8 @@ start_exo() {
     [ "$DEBUG" = true ] && export DEBUG=9 && echo -e "${GREEN}🐛 Debug:${NC} Enabled"
     
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${YELLOW}🌟 Web Interface:${NC} http://localhost:$api_port"
-    echo -e "${YELLOW}🔌 API Endpoint:${NC} http://localhost:$api_port/v1/chat/completions"
+    echo -e "${YELLOW}🌟 Web Interface:${NC} http://$HOSTNAME.local:$api_port"
+    echo -e "${YELLOW}🔌 API Endpoint:${NC} http://$HOSTNAME.local:$api_port/v1/chat/completions"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     

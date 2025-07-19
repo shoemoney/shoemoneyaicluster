@@ -14,6 +14,9 @@ NC='\033[0m'
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CLUSTER_SCRIPT="$SCRIPT_DIR/clusterexo.sh"
 
+# 🌐 Network configuration - use hostname for cluster access
+HOSTNAME="$(hostname -s)"
+
 # 📺 Function to start nodes in screen (best for remote sessions)
 start_in_screen() {
     local num_nodes="${1:-2}"
@@ -51,8 +54,8 @@ start_in_screen() {
     echo -e "  ${YELLOW}Ctrl+A, "${NC}                    # List all windows"
     echo -e "  ${YELLOW}Ctrl+A, K${NC}                    # Kill current window"
     echo ""
-    echo -e "${CYAN}🌐 Web Interface:${NC} http://localhost:52415"
-    echo -e "${CYAN}🔌 API Endpoint:${NC} http://localhost:52415/v1/chat/completions"
+    echo -e "${CYAN}🌐 Web Interface:${NC} http://$HOSTNAME.local:52415"
+    echo -e "${CYAN}🔌 API Endpoint:${NC} http://$HOSTNAME.local:52415/v1/chat/completions"
     
     # Ask if user wants to attach
     read -p "$(echo -e ${YELLOW}Attach to screen session now? [Y/n]: ${NC})" -n 1 -r
@@ -136,7 +139,7 @@ ${BLUE}Tips:${NC}
   - Screen mode is best for remote sessions
   - Tmux mode for local development
   - Terminal mode opens separate windows (macOS only)
-  - Access web UI at http://localhost:52415
+  - Access web UI at http://$HOSTNAME.local:52415
 
 ${GREEN}Screen Commands:${NC}
   Ctrl+A, N       Next window

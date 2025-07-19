@@ -18,6 +18,9 @@ NC='\033[0m' # No Color
 # 📍 Configuration
 INSTALL_DIR="${INSTALL_DIR:-$HOME/exo}"
 PYTHON_VERSION="3.11"  # 3.11 for better compatibility than 3.13
+
+# 🌐 Network configuration - use hostname for cluster access
+HOSTNAME="$(hostname -s)"
 NODE_NAME="${NODE_NAME:-$(hostname -s)}"
 REPO_URL="https://github.com/exo-explore/exo.git"
 BRANCH="main"
@@ -355,8 +358,8 @@ fi
 
 echo ""
 echo "🌐 API Endpoints:"
-echo "  Web UI: http://localhost:52415"
-echo "  API: http://localhost:52415/v1/chat/completions"
+echo "  Web UI: http://$HOSTNAME.local:52415"
+echo "  API: http://$HOSTNAME.local:52415/v1/chat/completions"
 EOF
     chmod +x "$INSTALL_DIR/cluster-status.sh"
     
@@ -430,8 +433,8 @@ show_summary() {
     fi
     
     echo -e "\n${YELLOW}🌐 Access Points:${NC}"
-    echo -e "  ${CYAN}Web UI:${NC} http://localhost:52415"
-    echo -e "  ${CYAN}API:${NC} http://localhost:52415/v1/chat/completions"
+    echo -e "  ${CYAN}Web UI:${NC} http://$HOSTNAME.local:52415"
+    echo -e "  ${CYAN}API:${NC} http://$HOSTNAME.local:52415/v1/chat/completions"
     
     echo -e "\n${PURPLE}📚 Next Steps:${NC}"
     echo -e "1. Source your profile: ${CYAN}source $PROFILE_FILE${NC}"
