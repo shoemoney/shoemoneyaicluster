@@ -20,6 +20,8 @@ HOSTNAME="$(hostname -s)"
 # 📺 Function to start nodes in screen (best for remote sessions)
 start_in_screen() {
     local num_nodes="${1:-2}"
+    local node_host_arg=""
+    [ -n "$NODE_HOST" ] && node_host_arg="--node-host $NODE_HOST"
     
     echo -e "${CYAN}🚀 Starting ${num_nodes} node cluster in screen...${NC}"
     
@@ -36,11 +38,11 @@ start_in_screen() {
     screen -S exo-cluster -X quit 2>/dev/null || true
     
     # Start main node in new screen session
-    screen -dmS exo-cluster -t main bash -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1)); exec bash"
+    screen -dmS exo-cluster -t main bash -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1)) $node_host_arg; exec bash"
     
     # Start worker nodes in new windows
     for i in $(seq 1 $((num_nodes-1))); do
-        screen -S exo-cluster -X screen -t "worker$i" bash -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id worker$i; exec bash"
+        screen -S exo-cluster -X screen -t "worker$i" bash -c "cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id worker$i $node_host_arg; exec bash"
     done
     
     echo -e "${GREEN}✅ Cluster started in screen session 'exo-cluster'${NC}"
@@ -68,6 +70,8 @@ start_in_screen() {
 # 🚀 Function to start nodes in tmux
 start_in_tmux() {
     local num_nodes="${1:-2}"
+    local node_host_arg=""
+    [ -n "$NODE_HOST" ] && node_host_arg="--node-host $NODE_HOST"
     
     echo -e "${CYAN}🚀 Starting ${num_nodes} node cluster in tmux...${NC}"
     
@@ -81,12 +85,12 @@ start_in_tmux() {
     tmux new-session -d -s exo-cluster
     
     # Start main node
-    tmux send-keys -t exo-cluster "$CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1))" C-m
+    tmux send-keys -t exo-cluster "$CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1)) $node_host_arg" C-m
     
     # Start worker nodes
     for i in $(seq 1 $((num_nodes-1))); do
         tmux new-window -t exo-cluster -n "worker$i"
-        tmux send-keys -t exo-cluster:$i "$CLUSTER_SCRIPT --node-id worker$i" C-m
+        tmux send-keys -t exo-cluster:$i "$CLUSTER_SCRIPT --node-id worker$i $node_host_arg" C-m
     done
     
     echo -e "${GREEN}✅ Cluster started in tmux session 'exo-cluster'${NC}"
@@ -103,16 +107,18 @@ start_in_tmux() {
 # 🖥️ Function to start nodes in separate terminals (macOS)
 start_in_terminals() {
     local num_nodes="${1:-2}"
+    local node_host_arg=""
+    [ -n "$NODE_HOST" ] && node_host_arg="--node-host $NODE_HOST"
     
     echo -e "${CYAN}🚀 Starting ${num_nodes} node cluster in separate terminals...${NC}"
     
     # Start main node
-    osascript -e "tell app \"Terminal\" to do script \"cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1))\""
+    osascript -e "tell app \"Terminal\" to do script \"cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id main --wait-peers $((num_nodes-1)) $node_host_arg\""
     
     # Start worker nodes
     for i in $(seq 1 $((num_nodes-1))); do
         sleep 1
-        osascript -e "tell app \"Terminal\" to do script \"cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id worker$i\""
+        osascript -e "tell app \"Terminal\" to do script \"cd $SCRIPT_DIR && $CLUSTER_SCRIPT --node-id worker$i $node_host_arg\""
     done
     
     echo -e "${GREEN}✅ Cluster nodes starting in separate Terminal windows${NC}"
@@ -123,17 +129,21 @@ show_help() {
     cat << EOF
 ${CYAN}🎯 ExoCluster Quick Starter${NC}
 
-${YELLOW}Usage:${NC} $0 [NODES] [MODE]
+${YELLOW}Usage:${NC} $0 [NODES] [MODE] [OPTIONS]
 
 ${YELLOW}Arguments:${NC}
   NODES   Number of nodes to start (default: 2)
   MODE    Launch mode: screen, tmux, terminal (default: screen)
 
+${YELLOW}Options:${NC}
+  --node-host HOST    Host binding for all nodes (default: 0.0.0.0)
+
 ${YELLOW}Examples:${NC}
-  $0              # Start 2 nodes in screen
-  $0 3            # Start 3 nodes in screen
-  $0 4 tmux       # Start 4 nodes in tmux
-  $0 2 terminal   # Start 2 nodes in separate terminals
+  $0                                      # Start 2 nodes in screen
+  $0 3                                    # Start 3 nodes in screen
+  $0 4 tmux                               # Start 4 nodes in tmux
+  $0 2 terminal                           # Start 2 nodes in separate terminals
+  $0 3 screen --node-host 192.168.1.11   # 3 nodes with specific host binding
 
 ${BLUE}Tips:${NC}
   - Screen mode is best for remote sessions
@@ -154,6 +164,25 @@ EOF
 main() {
     local num_nodes="${1:-2}"
     local mode="${2:-screen}"
+    
+    # Parse remaining arguments for options
+    shift 2 2>/dev/null || true  # Remove first two args safely
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --node-host)
+                NODE_HOST="$2"
+                shift 2
+                ;;
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            *)
+                echo -e "${YELLOW}Unknown option: $1${NC}"
+                shift
+                ;;
+        esac
+    done
     
     if [[ "$num_nodes" == "-h" ]] || [[ "$num_nodes" == "--help" ]]; then
         show_help
