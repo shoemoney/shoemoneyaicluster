@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/zsh
 # 🚀 Cluster launcher for exo - Run your own AI cluster at home!
 # This script helps you quickly start exo nodes for a distributed AI cluster
-
+deactivate
 set -e  # Exit on error
 
 # 🎨 Colors for output
@@ -23,11 +23,11 @@ DEFAULT_INFERENCE_ENGINE="mlx"
 
 # 🌐 Network configuration - use hostname for cluster access
 HOSTNAME="$(hostname -s)"
-LOCAL_IP="$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $2}' || echo 'localhost')"
+LOCAL_IP="$(ifconfig | grep "inet " | grep -v 127.0.0.1 | grep 192 | head -1 | awk '{print $2}' || echo 'localhost')"
 
 # 🛠️ Configuration
-VENV_PATH=".venv"
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+VENV=".venv"
+SCRIPT_DIR="$( cd "$( dirname "${zsh_SOURCE[0]}" )" && pwd )"
 
 # 📋 Function to display help
 show_help() {
@@ -83,11 +83,11 @@ EOF
 
 # 🔍 Function to check if virtual environment exists
 check_venv() {
-    if [ ! -d "$VENV_PATH" ]; then
+    if [ ! -d "/Users/shoemoney/exo/.venv/bin/activate" ]; then
         echo -e "${RED}❌ Virtual environment not found!${NC}"
         echo -e "${YELLOW}Please run the installation first:${NC}"
-        echo -e "  python3 -m venv $VENV_PATH"
-        echo -e "  source $VENV_PATH/bin/activate"
+        echo -e "  python3 -m venv /Users/shoemoney/exo/.venv"
+        echo -e "  source "/Users/shoemoney/exo/.venv/bin/activate"
         echo -e "  pip install -e ."
         exit 1
     fi
@@ -136,7 +136,7 @@ start_exo() {
     echo ""
     
     # Activate virtual environment and run
-    source "$VENV_PATH/bin/activate"
+    source '/Users/shoemoney/exo/.venv/bin/activate'
     exec $cmd
 }
 
@@ -238,7 +238,7 @@ main() {
     done
     
     # Check virtual environment
-    check_venv
+  #  check_venv
     
     # Start exo
     start_exo
