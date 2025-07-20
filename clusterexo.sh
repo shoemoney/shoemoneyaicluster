@@ -1,7 +1,7 @@
 #!/bin/zsh
 # 🚀 Cluster launcher for exo - Run your own AI cluster at home!
 # This script helps you quickly start exo nodes for a distributed AI cluster
-deactivate
+deactivate 2>/dev/null
 set -e  # Exit on error
 
 # 🎨 Colors for output
